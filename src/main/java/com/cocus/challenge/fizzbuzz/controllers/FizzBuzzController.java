@@ -1,22 +1,25 @@
 package com.cocus.challenge.fizzbuzz.controllers;
 
+import com.cocus.challenge.fizzbuzz.dto.FizzBuzzRequest;
+import com.cocus.challenge.fizzbuzz.service.FizzBuzzService;
+import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@AllArgsConstructor
 public class FizzBuzzController {
 
-    @GetMapping(value = "fizzbuzz")
-    public ResponseEntity<String> getHello() {
-        return new ResponseEntity<>("Hello", HttpStatus.OK);
-    }
+    private final FizzBuzzService service;
 
     @PostMapping(value = "fizzbuzz")
-    public ResponseEntity<String> postFizzBuzz() {
-        return new ResponseEntity<>("fizz", HttpStatus.OK);
+    public ResponseEntity<String> postFizzBuzz(@RequestBody FizzBuzzRequest body) {
+        String response = service.play(body.getNumber());
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
 }
