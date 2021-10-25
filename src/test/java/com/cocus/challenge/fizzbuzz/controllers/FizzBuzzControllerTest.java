@@ -69,14 +69,16 @@ public class FizzBuzzControllerTest {
         );
     }
 
-    @ParameterizedTest(name = "For {0} result is {1}")
+    @ParameterizedTest(name = "For {0} response is {1}")
     @MethodSource("fizzBuzzTestInputs")
-    public void shouldTestSeveralValues(int number, String result) throws Exception {
+    public void shouldTestSeveralValues(int number, String result) {
 
         //Given the path
         String path = "/fizzbuzz";
 
-        FizzBuzzRequest body = FizzBuzzRequest.builder().number(number).build();
+        FizzBuzzRequest body = FizzBuzzRequest.builder()
+                .number(number)
+                .build();
 
         val response = webTestClient
                 .post()
@@ -84,10 +86,9 @@ public class FizzBuzzControllerTest {
                 .body(Mono.just(body), FizzBuzzRequest.class)
                 .exchange()
                 .expectStatus().is2xxSuccessful()
-                .expectBody().returnResult();
-
-        String output = new String(Objects.requireNonNull(response.getResponseBody()));
-        assertThat(output).isEqualTo(result);
+                .expectBody()
+                .consumeWith(System.out::println)
+                .jsonPath("result").isEqualTo(result);
     }
 
 }
