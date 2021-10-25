@@ -14,9 +14,11 @@ import org.springframework.web.bind.annotation.RestController;
 @AllArgsConstructor
 public class FizzBuzzController {
 
+    private final static String PATH = "/fizzbuzz";
+
     private final FizzBuzzService service;
 
-    @PostMapping(value = "/fizzbuzz")
+    @PostMapping(value = PATH)
     public ResponseEntity<FizzBuzzResponse> postFizzBuzz(@RequestBody FizzBuzzRequest body) {
         String response = service.play(body.getNumber());
         return new ResponseEntity<>(FizzBuzzResponse.builder()
