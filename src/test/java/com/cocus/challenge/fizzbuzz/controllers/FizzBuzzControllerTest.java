@@ -17,10 +17,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
 
-import java.util.Objects;
 import java.util.stream.Stream;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 
 @WebFluxTest(FizzBuzzController.class)
@@ -54,10 +51,8 @@ public class FizzBuzzControllerTest {
                 .body(Mono.just(body), FizzBuzzRequest.class)
                 .exchange()
                 .expectStatus().is2xxSuccessful()
-                .expectBody().returnResult();
-
-        String response = new String(Objects.requireNonNull(result.getResponseBody()));
-        assertThat(response).isEqualTo("fizzbuzz");
+                .expectBody()
+                .jsonPath("result").isEqualTo("fizzbuzz");
     }
 
     private static Stream<Arguments> fizzBuzzTestInputs() {
@@ -87,7 +82,6 @@ public class FizzBuzzControllerTest {
                 .exchange()
                 .expectStatus().is2xxSuccessful()
                 .expectBody()
-                .consumeWith(System.out::println)
                 .jsonPath("result").isEqualTo(result);
     }
 
