@@ -16,11 +16,18 @@ import org.springframework.web.bind.annotation.RestController;
 public class FizzBuzzController {
 
     private final static String PATH = "/fizzbuzz";
+    private final static String HEALTH = "/health";
 
     private final FizzBuzzService service;
 
-    @GetMapping(value = PATH)
-    public ResponseEntity<FizzBuzzResponse> getFizzBuzz() {
+    @GetMapping(value = "/")
+    public ResponseEntity<FizzBuzzResponse> getHealthDefault() {
+        return new ResponseEntity<>(FizzBuzzResponse.builder()
+                .result("Health").build(), HttpStatus.OK);
+    }
+
+    @GetMapping(value = HEALTH)
+    public ResponseEntity<FizzBuzzResponse> getHealth() {
         return new ResponseEntity<>(FizzBuzzResponse.builder()
                 .result("Health").build(), HttpStatus.OK);
     }

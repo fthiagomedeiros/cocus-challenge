@@ -20,7 +20,22 @@ Resources:
   ApiGatewayRest:
     Type: AWS::ApiGatewayV2::Api
     Properties:
-      Description: FizzBuzz Api
+      Description: FizzBuzzApi
       Name: fizzbuzz-api-with-auth
       ProtocolType: HTTP
-      Target: arn:aws:lambda:us-east-1:409217766863:function:greet_lambda
+      Target: https://awseb-AWSEB-IQ0RJNWQMLU-1537742411.us-east-1.elb.amazonaws.com/
+
+  ApiIntegration:
+    Type: AWS::ApiGatewayV2::Integration
+    Properties:
+      ApiId: !Ref ApiGatewayRest
+      IntegrationMethod: POST
+      IntegrationType: HTTP_PROXY
+      IntegrationUri: https://awseb-AWSEB-IQ0RJNWQMLU-1537742411.us-east-1.elb.amazonaws.com/fizzbuzz
+      PayloadFormatVersion: 1.0
+
+  RouteFizzBuzz:
+    Type: AWS::ApiGatewayV2::Route
+    Properties:
+      ApiId: !Ref ApiGatewayRest
+      RouteKey: POST /fizzbuzz
