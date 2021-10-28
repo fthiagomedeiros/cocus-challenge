@@ -1,11 +1,11 @@
 branch-defaults:
-  main:
-    environment: cocus-challenge-prod
   develop:
     environment: cocus-challenge-dev
   feature/implement-fizzbuzz-logic:
     environment: cocus-challenge-dev
     group_suffix: null
+  main:
+    environment: cocus-challenge-prod
 deploy:
   artifact: target/FizzBuzz-0.0.1-SNAPSHOT.jar
 global:

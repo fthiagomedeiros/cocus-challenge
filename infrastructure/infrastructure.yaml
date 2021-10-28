@@ -20,22 +20,56 @@ Resources:
   ApiGatewayRest:
     Type: AWS::ApiGatewayV2::Api
     Properties:
-      Description: FizzBuzzApi
+      Description: FizzBuzz Api
       Name: fizzbuzz-api-with-auth
       ProtocolType: HTTP
-      Target: https://awseb-AWSEB-IQ0RJNWQMLU-1537742411.us-east-1.elb.amazonaws.com/
 
-  ApiIntegration:
+  ApiIntegrationFizzBuzz:
     Type: AWS::ApiGatewayV2::Integration
     Properties:
       ApiId: !Ref ApiGatewayRest
       IntegrationMethod: POST
       IntegrationType: HTTP_PROXY
-      IntegrationUri: https://awseb-AWSEB-IQ0RJNWQMLU-1537742411.us-east-1.elb.amazonaws.com/fizzbuzz
+      IntegrationUri: http://awseb-awseb-hmyxeex8evrm-1549813313.us-east-1.elb.amazonaws.com/fizzbuzz
       PayloadFormatVersion: 1.0
 
-  RouteFizzBuzz:
+  ApiIntegrationRoot:
+    Type: AWS::ApiGatewayV2::Integration
+    Properties:
+      ApiId: !Ref ApiGatewayRest
+      IntegrationMethod: POST
+      IntegrationType: HTTP_PROXY
+      IntegrationUri: http://awseb-awseb-hmyxeex8evrm-1549813313.us-east-1.elb.amazonaws.com/
+      PayloadFormatVersion: 1.0
+
+  APIFizzBuzzRootRoute:
     Type: AWS::ApiGatewayV2::Route
     Properties:
       ApiId: !Ref ApiGatewayRest
-      RouteKey: POST /fizzbuzz
+      RouteKey: 'GET /'
+      Target: !Join
+        - /
+        - - integrations
+          - !Ref ApiIntegrationRoot
+
+  APIFizzBuzzRoute:
+    Type: AWS::ApiGatewayV2::Route
+    Properties:
+      ApiId: !Ref ApiGatewayRest
+      RouteKey: 'POST /fizzbuzz'
+      Target: !Join
+        - /
+        - - integrations
+          - !Ref ApiIntegrationFizzBuzz
+
+  APIStage:
+    Type: AWS::ApiGatewayV2::Stage
+    Properties:
+      StageName: $default
+      AutoDeploy: true
+      ApiId: !Ref ApiGatewayRest
+
+Outputs:
+  APIURL:
+    Description: Invoke URL
+    Value: !Sub https://${ApiGatewayRest}.execute-api.${AWS::Region}.amazonaws.com/
