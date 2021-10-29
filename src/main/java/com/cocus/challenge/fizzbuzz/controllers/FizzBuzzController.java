@@ -34,7 +34,15 @@ public class FizzBuzzController {
 
     @PostMapping(value = PATH)
     public ResponseEntity<FizzBuzzResponse> postFizzBuzz(@RequestBody FizzBuzzRequest body) {
-        String response = service.play(body.getNumber());
+        String response;
+
+        try {
+            response = service.play(body.getNumber());
+        } catch (Exception ex) {
+            return new ResponseEntity<>(FizzBuzzResponse.builder()
+                    .result("Invalid Input").build(), HttpStatus.BAD_REQUEST);
+        }
+
         return new ResponseEntity<>(FizzBuzzResponse.builder()
                 .result(response).build(), HttpStatus.OK);
     }
