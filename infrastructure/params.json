@@ -1,0 +1,10 @@
+[
+  {
+    "ParameterKey": "EnvType",
+    "ParameterValue": "dev"
+  },
+  {
+    "ParameterKey": "LoadBalancerUri",
+    "ParameterValue": "LOAD_BALANCER_DNS"
+  }
+]

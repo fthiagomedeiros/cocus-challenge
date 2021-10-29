@@ -1,9 +1,6 @@
 branch-defaults:
   develop:
-    environment: cocus-challenge-dev
-  feature/implement-fizzbuzz-logic:
-    environment: cocus-challenge-dev
-    group_suffix: null
+    environment: fizzbuzz-cocus-challenge
   main:
     environment: cocus-challenge-prod
 deploy:
