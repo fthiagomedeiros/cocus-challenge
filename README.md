@@ -9,6 +9,25 @@ It has been developing using Java.
 * [Elastic Beanstalk CLI](https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/eb-cli3.html)
 
 
+## Running the code
+
+You have two options to run the code.
+
+### - Locally
+
+To run locally, you only have to execute in your shell the command below
+
+```shell
+./mvnw spring-boot:run
+```
+
+Now you are able to access the endpoints 
+http://localhost:5000/swagger-ui.html 
+and make requests to the endpoint POST /fizzbuzz 
+passing the payload { "number": 60 }
+
+### - Deploy it in AWS cloud using elastic beanstalk (steps below)
+
 #### AWS credentials
 Set the AWS credentials (usually `~/.aws/credentials`)
 You can set AWS credentials through aws cli
@@ -36,13 +55,6 @@ to provision the API Gateway you have to:
 ```shell
 aws cloudformation create-stack --stack-name fizzbuzz-cocus-dev --parameters file://infrastructure/params.json --template-body file://infrastructure/infrastructure.yaml
 ```
-
-## Running the code
-
-You have two options to run the code.
-
-- Locally
-- Deploy it in AWS cloud using elastic beanstalk
 
 ## Infrastructure as code
 
