@@ -1,0 +1,75 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: >
+  AWS CloudFormation Template for provisioning AWS infrastructure for fizzbuzz project
+
+Parameters:
+  EnvType:
+    Type: String
+    Description: Environment type (dev, qa, stg or prod).
+    AllowedValues:
+      - prod
+      - qa
+      - stg
+      - dev
+
+Resources:
+
+  # *******************************
+  # Api Gateway
+  # *******************************
+  ApiGatewayRest:
+    Type: AWS::ApiGatewayV2::Api
+    Properties:
+      Description: FizzBuzz Api
+      Name: fizzbuzz-api-with-auth
+      ProtocolType: HTTP
+
+  ApiIntegrationFizzBuzz:
+    Type: AWS::ApiGatewayV2::Integration
+    Properties:
+      ApiId: !Ref ApiGatewayRest
+      IntegrationMethod: POST
+      IntegrationType: HTTP_PROXY
+      IntegrationUri: http://awseb-awseb-hmyxeex8evrm-1549813313.us-east-1.elb.amazonaws.com/fizzbuzz
+      PayloadFormatVersion: 1.0
+
+  ApiIntegrationRoot:
+    Type: AWS::ApiGatewayV2::Integration
+    Properties:
+      ApiId: !Ref ApiGatewayRest
+      IntegrationMethod: POST
+      IntegrationType: HTTP_PROXY
+      IntegrationUri: http://awseb-awseb-hmyxeex8evrm-1549813313.us-east-1.elb.amazonaws.com/
+      PayloadFormatVersion: 1.0
+
+  APIFizzBuzzRootRoute:
+    Type: AWS::ApiGatewayV2::Route
+    Properties:
+      ApiId: !Ref ApiGatewayRest
+      RouteKey: 'GET /'
+      Target: !Join
+        - /
+        - - integrations
+          - !Ref ApiIntegrationRoot
+
+  APIFizzBuzzRoute:
+    Type: AWS::ApiGatewayV2::Route
+    Properties:
+      ApiId: !Ref ApiGatewayRest
+      RouteKey: 'POST /fizzbuzz'
+      Target: !Join
+        - /
+        - - integrations
+          - !Ref ApiIntegrationFizzBuzz
+
+  APIStage:
+    Type: AWS::ApiGatewayV2::Stage
+    Properties:
+      StageName: $default
+      AutoDeploy: true
+      ApiId: !Ref ApiGatewayRest
+
+Outputs:
+  APIURL:
+    Description: Invoke URL
+    Value: !Sub https://${ApiGatewayRest}.execute-api.${AWS::Region}.amazonaws.com/
