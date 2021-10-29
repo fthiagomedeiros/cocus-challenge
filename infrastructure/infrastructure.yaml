@@ -11,6 +11,10 @@ Parameters:
       - qa
       - stg
       - dev
+  LoadBalancerUri:
+    Type: String
+    Description: ELB URI provisioned for elastic beanstalk
+
 
 Resources:
 
@@ -30,16 +34,16 @@ Resources:
       ApiId: !Ref ApiGatewayRest
       IntegrationMethod: POST
       IntegrationType: HTTP_PROXY
-      IntegrationUri: http://awseb-awseb-hmyxeex8evrm-1549813313.us-east-1.elb.amazonaws.com/fizzbuzz
+      IntegrationUri: !Join ["/", [!Ref LoadBalancerUri, "fizzbuzz"]]
       PayloadFormatVersion: 1.0
 
   ApiIntegrationRoot:
     Type: AWS::ApiGatewayV2::Integration
     Properties:
       ApiId: !Ref ApiGatewayRest
-      IntegrationMethod: POST
+      IntegrationMethod: GET
       IntegrationType: HTTP_PROXY
-      IntegrationUri: http://awseb-awseb-hmyxeex8evrm-1549813313.us-east-1.elb.amazonaws.com/
+      IntegrationUri: !Ref LoadBalancerUri
       PayloadFormatVersion: 1.0
 
   APIFizzBuzzRootRoute:
